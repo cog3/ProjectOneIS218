@@ -15,7 +15,29 @@ catch(PDOException $e)
 	echo "Connection failed: " . $e->getMessage();
 	http_error("500 Internal Server Error\n\n"."There was a SQL error:\n\n" . $e->getMessage());
 }
-// this is for the connection 
+
+	if(isset($_POST['fname'], $_POST['lname'], $_POST['reg_email']
+			, $_POST['reg_phone'], $_POST['reg_birth'])){
+		$email = $_POST['reg_email'];
+		$firstname = $_POST['fname'];
+		$lastname = $_POST['lname'];
+		$number = $_POST['reg_phone'];
+		$birhday = $_POST['reg_birth'];
+		$gender = null;
+		if(isset($_POST['isMale'])){
+			$gender = $_POST['isMale'];
+		}
+		if(isset($_POST['isFemale'])){
+			$gender = $_POST['isFemale'];
+		}
+		if(isset($_POST['isOther'])){
+			$gender = $_POST['isOther'];
+		}
+		echo "Your name is {$firstname} {$lastname} and your email is {$email}.<br> Your gender is {$gender}.<br>";
+	}
+print_r($_POST);
+
+
 ?>
 
 
@@ -46,76 +68,51 @@ catch(PDOException $e)
         <div class="col-sm-4" style="align-content: middle;" >
           <form class="form-signin">
             <h2 style="margin: 0; color: Gray;">Sign Up</h2>
-            <input type="text" id="inputFirstname" class="form-control" placeholder="Firstname" name="fname" required />
-            <input type="text" id="inputLastName" class="form-control" placeholder="Lastname" name="lname" required />
+            
+
+
+
+            <input type="text" id="inputFirstname" class="form-control" placeholder="First name" name="fname" required />
+            <input type="text" id="inputLastName" class="form-control" placeholder="Last name" name="lname" required />
+        
+
+
+
         </div>
       </div>
       <div class="row">
           <div class="col-sm-4"></div>
           <div class="col-sm-4">
+
+
+
+
             <input type="text" id="inputEmail" class="form-control" placeholder="E-mail" name="reg_email" required />
             <input type="text" id="inputPhone" class="form-control" placeholder="Phone Number" name="reg_phone" required />
             <input type="text" id="inputBirth" class="form-control" placeholder="Birthday (mm/dd/yyyy)" name="reg_birth" required />
-            <div class="dropdown">
-                  <button class="btn btn-default dropdown-toggle" type="button" id ="gender" data-toggle="dropdown" aria-haspopup = "true" aria-expanded = "true"> Gender
-                  <span class="caret"></span></button>
-                  <ul class="dropdown-menu" aria-labelled-by = "gender">
-                    <li><a href="#">Female</a></li>
-                    <li><a href="#">Male</a></li>
-                    <li><a href="#">Other</a></li>
-                  </ul>
-            </div>      
+
+
+
+
+           	<input type="radio" name="isMale" value="male"> Male
+			<input type="radio" name="isFemale" value="female"> Female
+			<input type="radio" name="isOther" value="other"> Other<br>
+
+
+
+
+
           </div>
           <div class="col-sm-4"></div>
       </div>
       <div class="row">
         <div class="col-sm-4"></div>
         <div class="col-sm-4">
-          <button class="btn btn-sm btn-success btn-block" type="submit" id="submitButton" name = "submit" style="margin-top: 2em;">Sign in</button>
+          <button class="btn btn-sm btn-success btn-block" type="submit" id="submitButton" name = "submit" value="submit" style="margin-top: 2em;">Sign Up</button>
         </div>
         <div class="col-sm-4">
       </div>  
-      
-
       </form >
-
     </div> <!-- /container -->
   </body>
 </html>
-
-
-
-<?php
-
-//$gender = $_POST['reg_gender']
-
-	$firstname = $_POST['fname']; 
-	$lastname = $_POST['lname'];
-	$email = $_POST['reg_email'];
-	$phonenumber = $_POST['reg_phone'];
-	$birthdate = $_POST['reg_birth'];
-
-
-function runQuery($query){
-	global $conn;
-	try{
-	    $get = $conn->prepare($query);
-	    $get->execute();
-	    $products = $get->fetchAll();
-	    $get->closeCursor();
-	    return $products;
-	}catch(PDOException $e){
-		http_error("500 Internal Server Error\n\n"."There was a SQL error:\n\n" . $e->getMessage());
-		}	  
-}
-function http_error($message) 
-{
-	header("Content-type: text/plain");
-	die($message);
-}
-
-
-?>
-
-
-

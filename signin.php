@@ -9,7 +9,7 @@
     <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script> 
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom styles for this template -->
-    <link href="signin.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
 
   </head>
 
@@ -24,14 +24,14 @@
         <div class="col-sm-4"></div>
         <div class="col-sm-4" style="align-content: middle;" >
           <form class="form-signin">
-            <h2 style="margin: 0; color: Gray;">Sign In</h2>
+            <h2 style="margin: 0;">Sign In</h2>
         </div>
       </div>
       <div class="row">
           <div class="col-sm-4"></div>
           <div class="col-sm-4">
             <input type="text" id="inputEmail" class="form-control" placeholder="E-mail" name="reg_email" required />
-            <input type="text" id="inputPassword" class="form-control" placeholder="Password" name="reg_password" required />
+            <input type="password" id="inputPassword" class="form-control" placeholder="Password" name="reg_password" required />
           </div>
           <div class="col-sm-4"></div>
       </div>
@@ -55,12 +55,10 @@ $username = "cog3";
 $password = "nguyen59";
 $dbname = "cog3";
 $conn = NULL;
-session_start();
 try 
 {
     $conn = new PDO("mysql:host=$hostname;dbname=$dbname",
     $username, $password);
-    echo 'Connected successfully'.'<br>';
 }
 catch(PDOException $e)
 {
@@ -91,19 +89,18 @@ function runQuery($query) {
   $runEmails = runQuery($checkEmail);
   if(count(runEmails) < 1){
        header('HTTP/1.1 500 Internal Server Error');
-        exit("<blockquote> Sign In ERROR: Email does not exist. </]blockquote>");
+        exit("<blockquote> Sign In ERROR: Email does not exist. </blockquote>");
   }
 
   $login = 'SELECT * FROM cog3.accounts WHERE email="'.$email.'" AND password="'.$password.'"';
   $results = runQuery($login);
   if (count($results) >= 1){
-      header('Location:welcome.html');
+      header('Location:welcome.php');
   }
-  /**
-  else{
-      header('HTTP/1.1 500 Internal Server Error');
-      exit("<blockquote> Sign In ERROR: Incorrect Username and Password. <br><a href='index.php'>Go back to log-in page.</a>");
-  }**/
   
+  if (count($results) == 0){
+      header('HTTP/1.1 500 Internal Server Error');
+      exit("<blockquote> Sign In ERROR: Incorrect Username and Password. </blockquote>");
+  }
 
 ?>

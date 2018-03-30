@@ -13,17 +13,22 @@
   </head>
 
 
+<style>
+body{
+  background-color: #D3D3D3;
+}
 
+</style>
 
 
   <body>
-    <form action="index.php" method="POST">
+    <form action="index.php" method="POST" autocomplete="off">
     <div class="container">
       <div class="row" style="margin-top: 5em;">
         <div class="col-sm-4"></div>
         <div class="col-sm-4" style="align-content: middle;" >
           <form class="form-signin">
-            <h2 style="margin: 0; color: Gray;">Sign Up</h2>
+            <h2 style="margin: 0; ">Sign Up</h2>
             
 
 
@@ -46,8 +51,8 @@
             <input type="text" id="inputEmail" class="form-control" placeholder="E-mail" name="reg_email" value="<?php echo($email);?>" required />
             <input type="text" id="inputPhone" class="form-control" placeholder="Phone Number" name="reg_phone" value="<?php echo($number);?>" required />
             <input type="text" id="inputBirth" class="form-control" placeholder="Birthday (mm/dd/yyyy)" value="<?php echo($birthday);?>" name="reg_birth" required />
-            <input type="text" id="inputPassword" class="form-control" placeholder="Enter password" value="<?php echo($password);?>" name="reg_password" required /> 
-            <input type="text" id="inputMatchPassword" class="form-control" placeholder="Re-Enter password" value="<?php echo($password);?>" name="reg_Repassword" required /> 
+            <input type="password" id="inputPassword" class="form-control" placeholder="Enter password" value="<?php echo($password);?>" name="reg_password" required /> 
+            <input type="password" id="inputMatchPassword" class="form-control" placeholder="Re-Enter password" value="<?php echo($password);?>" name="reg_Repassword" required /> 
 
 
            	<input type="radio" name="isMale" value="male"> Male
@@ -148,5 +153,4 @@ if($password != $match_password){
 	  $insertAccount = "INSERT INTO cog3.accounts (email, fname, lname, phone, birthday, gender, password) VALUES ('$email', '$firstname', '$lastname', '$number', '$birthday', '$gender', '$password')"; 
 	  $resultsPositive = runQuery($insertAccount);
 		header("Location: signin.php");
-    session_start();
 ?>

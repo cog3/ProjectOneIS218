@@ -1,33 +1,3 @@
-<?php
-$hostname = "sql1.njit.edu";
-$username = "cog3";
-$password = "nguyen59";
-$dbname = "cog3";
-$conn = NULL;
-try 
-{
-    $conn = new PDO("mysql:host=$hostname;dbname=$dbname",
-    $username, $password);
-    echo 'Connected successfully'.'<br>';
-}
-catch(PDOException $e)
-{
-	echo "Connection failed: " . $e->getMessage();
-	http_error("500 Internal Server Error\n\n"."There was a SQL error:\n\n" . $e->getMessage());
-}
-
-	if(isset($_POST['reg_email'], $_POST['reg_password'])){
-		$password = $_POST['reg_password'];
-    $email = $_POST['reg_email'];
-	}
-
-
-  //if email or password not found, prompt user again
-  //if all match then take the user to the welcome page
-
-?>
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -48,7 +18,7 @@ catch(PDOException $e)
 
 
   <body>
-    <form action="index.php" method="POST">
+    <form action="signin.php" method="POST">
     <div class="container">
       <div class="row" style="margin-top: 5em;">
         <div class="col-sm-4"></div>
@@ -78,3 +48,62 @@ catch(PDOException $e)
     </div> <!-- /container -->
   </body>
 </html>
+
+<?php
+$hostname = "sql1.njit.edu";
+$username = "cog3";
+$password = "nguyen59";
+$dbname = "cog3";
+$conn = NULL;
+session_start();
+try 
+{
+    $conn = new PDO("mysql:host=$hostname;dbname=$dbname",
+    $username, $password);
+    echo 'Connected successfully'.'<br>';
+}
+catch(PDOException $e)
+{
+  echo "Connection failed: " . $e->getMessage();
+  http_error("500 Internal Server Error\n\n"."There was a SQL error:\n\n" . $e->getMessage());
+}
+
+  if(isset($_POST['reg_email'], $_POST['reg_password'])){
+    $password = $_POST['reg_password'];
+    $email = $_POST['reg_email'];
+  }
+
+function runQuery($query) {
+  global $conn;
+    try {
+    $q = $conn->prepare($query);
+    $q->execute();
+    $results = $q->fetchAll();
+    $q->closeCursor();
+    return $results;  
+  } catch (PDOException $e) {
+    http_error("500 Internal Server Error\n\n"."There was a SQL error:\n\n" . $e->getMessage());
+  }   
+}
+
+
+  $checkEmail = 'SELECT * FROM cog3.accounts WHERE email="'.$email.'"';
+  $runEmails = runQuery($checkEmail);
+  if(count(runEmails) < 1){
+       header('HTTP/1.1 500 Internal Server Error');
+        exit("<blockquote> Sign In ERROR: Email does not exist. </]blockquote>");
+  }
+
+  $login = 'SELECT * FROM cog3.accounts WHERE email="'.$email.'" AND password="'.$password.'"';
+  $results = runQuery($login);
+  if (count($results) >= 1){
+      header('Location:welcome.html');
+  }
+  /**
+  else{
+      header('HTTP/1.1 500 Internal Server Error');
+      exit("<blockquote> Sign In ERROR: Incorrect Username and Password. <br><a href='index.php'>Go back to log-in page.</a>");
+  }**/
+  
+
+?>

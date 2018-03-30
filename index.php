@@ -46,8 +46,8 @@
             <input type="text" id="inputEmail" class="form-control" placeholder="E-mail" name="reg_email" value="<?php echo($email);?>" required />
             <input type="text" id="inputPhone" class="form-control" placeholder="Phone Number" name="reg_phone" value="<?php echo($number);?>" required />
             <input type="text" id="inputBirth" class="form-control" placeholder="Birthday (mm/dd/yyyy)" value="<?php echo($birthday);?>" name="reg_birth" required />
-
-
+            <input type="text" id="inputPassword" class="form-control" placeholder="Enter password" value="<?php echo($password);?>" name="reg_password" required /> 
+            <input type="text" id="inputMatchPassword" class="form-control" placeholder="Re-Enter password" value="<?php echo($password);?>" name="reg_Repassword" required /> 
 
 
            	<input type="radio" name="isMale" value="male"> Male
@@ -87,7 +87,6 @@ try
 {
     $conn = new PDO("mysql:host=$hostname;dbname=$dbname",
     $username, $password);
-    echo 'Connected successfully'.'<br>';
 }
 catch(PDOException $e)
 {
@@ -114,7 +113,7 @@ function http_error($message)
 
 
 	if(isset($_POST['fname'], $_POST['lname'], $_POST['reg_email']
-			, $_POST['reg_phone'], $_POST['reg_birth'])){
+			, $_POST['reg_phone'], $_POST['reg_birth'], $_POST['reg_password'], $_POST['reg_Repassword'])){
 		$email = $_POST['reg_email'];
 		$firstname = $_POST['fname'];
 		$lastname = $_POST['lname'];
@@ -130,6 +129,8 @@ function http_error($message)
 		if(isset($_POST['isOther'])){
 			$gender = $_POST['isOther'];
 		}
+		$password = $_POST['reg_password'];
+    $match_password = $_POST['reg_Repassword'];
 	}
 
 
@@ -138,16 +139,14 @@ function http_error($message)
 	$results = runQuery($sql);
 	if (count($results) > 0){
 			header('HTTP/1.1 500 Internal Server Error');
-			exit("</br><h4> <blockquote> ERROR! This e-mail address already exists. Please try again! <blockquote> </h4><br>");
+			exit("</br><h4><blockquote> ERROR! This e-mail address already exists. Please try again! </blockquote> </h4><br>");
 	}
-	$insertAccount = "INSERT INTO cog3.accounts (email, fname, lname, phone, birthday, gender) VALUES ('$email', '$firstname', '$lastname', '$number', '$birthday', '$gender')"; 
-	$resultsPositive = runQuery($insertAccount);
-	
-		header("Location: signin.html");
-
-
-
+if($password != $match_password){
+  header('HTTP/1.1 500 Internal Server Error');
+    exit("</br><h4><blockquote> ERROR! Passwords don't match. Please try again! </blockquote> </h4><br>");
+}
+	  $insertAccount = "INSERT INTO cog3.accounts (email, fname, lname, phone, birthday, gender, password) VALUES ('$email', '$firstname', '$lastname', '$number', '$birthday', '$gender', '$password')"; 
+	  $resultsPositive = runQuery($insertAccount);
+		header("Location: signin.php");
+    session_start();
 ?>
-
-
-
